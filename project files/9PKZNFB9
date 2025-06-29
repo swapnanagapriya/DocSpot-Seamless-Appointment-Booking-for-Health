@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MediCareBook - Combined Pages</title>
+  <!-- Font Awesome for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  <style>
+    /* Reset & globals */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #d1dbda;
+      color: #333;
+      line-height: 1.4;
+    }
+    a { text-decoration: none; }
+    ul { list-style: none; }
+
+    /* Shared header */
+    header {
+      background-color: #edf5f4;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #ffc107;
+    }
+    header nav a {
+      margin-left: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+    header nav a.btn {
+      background: #ffc107;
+      color: #000;
+      padding: 8px 16px;
+      border-radius: 20px;
+    }
+    header nav a.btn:hover { opacity: 0.9; }
+
+    /* Sidebar & wrapper for logged-in pages */
+    .wrapper {
+      display: flex;
+      min-height: 100vh;
+      background: #c2d0cd;
+    }
+    .sidebar {
+      width: 220px;
+      background: #7c7676;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+    .sidebar .logo { font-size: 1.3rem; margin-bottom: 30px; }
+    .sidebar ul li a {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      color: #fff;
+      margin-bottom: 10px;
+      border-radius: 4px;
+    }
+    .sidebar ul li a:hover { background: #686261; }
+    .sidebar ul li a .icon { margin-right: 8px; }
+
+    /* Topbar for logged-in pages */
+    .topbar {
+      background: #e7e7e6;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+    }
+    .topbar .bell {
+      font-size: 1.2rem; margin-right: 8px;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    /* Utility */
+    .container { padding: 40px; }
+    .center { text-align: center; }
+
+    /* --- Landing (index) --- */
+    #landing {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px;
+      background: #edf5f4;
+    }
+    #landing header { width: 100%; }
+    #landing .landing-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      width: 100%;
+      max-width: 1200px;
+      margin-top: 40px;
+    }
+    #landing img { max-width: 45%; border-radius: 10px; }
+    #landing .hero h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+    #landing .hero p {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+    }
+
+    /* --- Auth forms (register & login) --- */
+    .auth {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 40px;
+      gap: 40px;
+    }
+    .auth .form-box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    .auth h1 {
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+    }
+    .auth label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+    .auth input {
+      width: 100%;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 20px;
+      background: #fefefe;
+    }
+    .auth .form-box button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 25px;
+      background: #f4c542;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .auth .form-box button:hover { opacity: 0.9; }
+    .auth .switch {
+      margin-top: 15px;
+      text-align: center;
+    }
+    .auth .switch a { color: #2361a9; }
+    .auth .image-box img {
+      max-width: 400px;
+      border-radius: 10px;
+    }
+
+    /* --- Admin Dashboard --- */
+    #admin {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    #admin .admin-panel {
+      background: #fff;
+      margin: 20px auto;
+      padding: 20px;
+      border-radius: 8px 8px 0 0;
+      width: 100%;
+      max-width: 800px;
+    }
+    #admin .admin-panel h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #admin table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    #admin th, #admin td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    #admin th { background: #f2f2f2; }
+
+    /* --- Apply Doctor --- */
+    #apply {
+      flex: 1;
+      background: #f0f2f5;
+    }
+    #apply .banner {
+      margin: 20px auto;
+      max-width: 600px;
+      padding: 15px 20px;
+      background: #fff;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      border-left: 5px solid #28a745;
+      display: flex;
+      align-items: center;
+      border-radius: 4px;
+    }
+    #apply .banner i {
+      margin-right: 10px; font-size: 18px;
+    }
+    #apply .apply-content {
+      display: flex;
+      padding: 20px;
+      gap: 40px;
+      justify-content: center;
+    }
+    #apply .apply-form {
+      background: #fff;
+      padding: 20px;
+      border-radius: 6px;
+      width: 100%;
+      max-width: 600px;
+    }
+    #apply .apply-form h2 {
+      margin-bottom: 20px;
+    }
+    #apply .apply-form h3 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 4px;
+    }
+    #apply .apply-form label {
+      display: block; margin: 8px 0 4px;
+    }
+    #apply .apply-form input {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    #apply .apply-form .timings {
+      display: flex; align-items: center;
+    }
+    #apply .apply-form .timings span {
+      margin: 0 8px;
+    }
+    #apply .apply-form .actions {
+      text-align: right; margin-top: 20px;
+    }
+    #apply .apply-form button {
+      padding: 10px 20px;
+      background: #007bff;
+      border: none;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #apply .apply-image img {
+      max-width: 300px;
+      border-radius: 10px;
+    }
+
+    /* --- Home (Doctor list) --- */
+    #home {
+      flex: 1;
+      background: #c2d0cd;
+      padding: 20px;
+    }
+    #home h1 {
+      text-align: center; margin-bottom: 20px;
+    }
+    #home .home-cards {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    #home .home-card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 6px;
+      width: 280px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    #home .home-card h2 { margin-bottom: 12px; }
+    #home .home-card p { margin: 6px 0; }
+    #home .home-card p span {
+      font-weight: bold;
+    }
+    #home .home-card a.btn {
+      display: inline-block;
+      margin-top: 12px;
+      background: #007bff;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LANDING PAGE -->
+  <section id="landing">
+    <header>
+      <div class="logo">BOOK A DOCTOR</div>
+      <nav>
+        <a href="#login" class="btn">Login</a>
+        <a href="#register" class="btn">Register</a>
+      </nav>
+    </header>
+    <div class="landing-content">
+      <!-- use your first image here -->
+      <img src="C:/Users/ASUS/Downloads/doctors-cover.png" alt="Group of doctors">
+      <div class="hero">
+        <h2>Effortlessly schedule your doctor</h2>
+        <p>appointments with just a few clicks, putting your health in your hands.</p>
+        <a href="#home" class="btn">Book your Doctor</a>
+      </div>
+    </div>
+    <footer>© 2023 MediCareBook</footer>
+  </section>
+
+  <!-- REGISTER PAGE -->
+  <section id="register" style="display:none;">
+    <header>
+      <div class="logo">MediCareBook</div>
+      <nav>
+        <a href="#landing">Home</a>
+        <a href="#login">Login</a>
+        <a href="#register" class="btn">Register</a>
+      </nav>
+    </header>
+    <div class="auth">
+      <div class="form-box">
+        <h1>Sign up to your account</h1>
+        <form>
+          <label for="r-fullName">Full name</label>
+          <input type="text" id="r-fullName" placeholder="Your full name">
+          <label for="r-email">Email</label>
+          <input type="email" id="r-email" placeholder="you@example.com">
+          <label for="r-password">Password</label>
+          <input type="password" id="r-password" placeholder="Create a password">
+          <label for="r-phone">Phone</label>
+          <input type="tel" id="r-phone" placeholder="1234567890">
+          <button type="submit">Register</button>
+        </form>
+        <div class="switch">
+          <a href="#login">Have an account? Login here</a>
+        </div>
+      </div>
+      <!-- use your second image here -->
+      <div class="image-box">
+        <img src="C:/Users/ASUS/Downloads/images.jpg" alt="Doctor visit illustration">
+      </div>
+    </div>
+    <footer>© 2023 MediCareBook</footer>
+  </section>
+
+  <!-- LOGIN PAGE -->
+  <section id="login" style="display:none;">
+    <header>
+      <div class="logo">MediCareBook</div>
+      <nav>
+        <a href="#landing">Home</a>
+        <a href="#login" class="btn">Login</a>
+        <a href="#register">Register</a>
+      </nav>
+    </header>
+    <div class="auth">
+      <!-- use your third image here -->
+      <div class="image-box">
+        <img src="C:/Users/ASUS/Downloads/Generic_696x464_122.jpg" alt="Doctor and patient illustration">
+      </div>
+      <div class="form-box">
+        <h1>Sign in to your account</h1>
+        <form>
+          <label for="l-email">Email</label>
+          <input type="email" id="l-email" placeholder="Enter your email">
+          <label for="l-password">Password</label>
+          <input type="password" id="l-password" placeholder="Enter your password">
+          <button type="submit">Let’s Enter</button>
+        </form>
+        <div class="switch">
+          <a href="#register">Don’t have an account? Register here</a>
+        </div>
+      </div>
+    </div>
+    <footer>© 2023 MediCareBook</footer>
+  </section>
+
+  <!-- ADMIN DASHBOARD -->
+  <section id="admin" class="wrapper" style="display:none;">
+    <nav class="sidebar">
+      <div class="logo">MediCareBook</div>
+      <ul>
+        <li><a href="#"><i class="fas fa-user icon"></i>Users</a></li>
+        <li><a href="#"><i class="fas fa-user-md icon"></i>Doctor</a></li>
+        <li><a href="#"><i class="fas fa-sign-out-alt icon"></i>Logout</a></li>
+      </ul>
+    </nav>
+    <div class="admin-content">
+      <div class="topbar">
+        <i class="fas fa-bell bell"></i>
+        <span>Hi..Admin</span>
+      </div>
+      <div class="admin-panel">
+        <h1>All Appointments for Admin Panel</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>Appointment ID</th>
+              <th>User Name</th>
+              <th>Doctor Name</th>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- dynamic data here -->
+          </tbody>
+        </table>
+      </div>
+      <footer>© 2023 MediCareBook</footer>
+    </div>
+  </section>
+
+  <!-- APPLY FOR DOCTOR -->
+  <section id="apply" class="wrapper" style="display:none;">
+    <nav class="sidebar">
+      <div class="logo">Book A Doctor</div>
+      <ul>
+        <li><a href="#"><i class="fas fa-calendar-check icon"></i>Appointments</a></li>
+        <li><a href="#"><i class="fas fa-user-md icon"></i>Apply doctor</a></li>
+        <li><a href="#"><i class="fas fa-sign-out-alt icon"></i>Logout</a></li>
+      </ul>
+    </nav>
+    <div class="admin-content">
+      <div class="topbar">
+        <i class="fas fa-bell bell"></i>
+        <span>User</span>
+      </div>
+      <div class="banner">
+        <i class="fas fa-check-circle"></i>
+        <span>Doctor Registration request sent successfully</span>
+      </div>
+      <div class="apply-content">
+        <div class="apply-form">
+          <h2>Apply for Doctor</h2>
+          <h3>Personal Details:</h3>
+          <label>Full Name</label>
+          <input type="text" placeholder="Enter full name">
+          <label>Phone</label>
+          <input type="tel" placeholder="Enter phone">
+          <label>Email</label>
+          <input type="email" placeholder="Enter email">
+          <label>Address</label>
+          <input type="text" placeholder="Enter address">
+          <h3>Professional Details:</h3>
+          <label>Specialization</label>
+          <input type="text" placeholder="Enter specialization">
+          <label>Experience (yrs)</label>
+          <input type="text" placeholder="Enter experience">
+          <label>Fees</label>
+          <input type="text" placeholder="Enter fees">
+          <label>Timings</label>
+          <div class="timings">
+            <input type="time"> <span>to</span> <input type="time">
+          </div>
+          <div class="actions">
+            <button type="submit">Submit</button>
+          </div>
+        </div>
+        <div class="apply-image">
+          <!-- reuse one of your images here if desired -->
+          <img src="C:/Users/ASUS/Downloads/images.jpg" alt="Doctor application illustration">
+        </div>
+      </div>
+      <footer>© 2023 MediCareBook</footer>
+    </div>
+  </section>
+
+  <!-- HOME (Doctor list) -->
+  <section id="home" class="wrapper" style="display:none;">
+    <nav class="sidebar">
+      <div class="logo">Book A Doctor</div>
+      <ul>
+        <li><a href="#"><i class="fas fa-calendar-check icon"></i>Appointments</a></li>
+        <li><a href="#"><i class="fas fa-user-md icon"></i>Apply doctor</a></li>
+        <li><a href="#"><i class="fas fa-sign-out-alt icon"></i>Logout</a></li>
+      </ul>
+    </nav>
+    <div class="home-content">
+      <div class="topbar">
+        <i class="fas fa-bell bell"></i>
+        <span>User</span>
+      </div>
+      <h1>Home</h1>
+      <div class="home-cards">
+        <div class="home-card">
+          <h2>Dr. Koushick</h2>
+          <p>Phone: <span>09176478438</span></p>
+          <p>Address: <span>chennai</span></p>
+          <p>Specialization: <span>ENT</span></p>
+          <p>Experience: <span>5 Yrs</span></p>
+          <p>Fees: <span>1000</span></p>
+          <p>Timing: <span>07:00 : 12:00</span></p>
+          <a href="#" class="btn">Book Now</a>
+        </div>
+        <div class="home-card">
+          <h2>Dr. Karthick</h2>
+          <p>Phone: <span>09176478438</span></p>
+          <p>Address: <span>Kerala</span></p>
+          <p>Specialization: <span>Bone</span></p>
+          <p>Experience: <span>10 Yrs</span></p>
+          <p>Fees: <span>500</span></p>
+          <p>Timing: <span>-- : --</span></p>
+          <a href="#" class="btn">Book Now</a>
+        </div>
+      </div>
+      <footer>© 2023 MediCareBook</footer>
+    </div>
+  </section>
+
+  <!-- JavaScript to switch between sections via hash -->
+  <script>
+    function showSection() {
+      document
+        .querySelectorAll('body > section')
+        .forEach(sec => {
+          const id = location.hash.slice(1) || 'landing';
+          sec.style.display = sec.id === id 
+            ? (sec.classList.contains('wrapper') ? 'flex' : 'block') 
+            : 'none';
+        });
+    }
+    window.addEventListener('hashchange', showSection);
+    window.addEventListener('load', showSection);
+  </script>
+
+</body>
+</html>
